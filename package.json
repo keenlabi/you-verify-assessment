@@ -1,0 +1,19 @@
+{
+  "name": "you-verify-assessment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:inventory": "cd services/inventory && npm run start:dev",
+    "dev:order": "cd services/order && npm run start:dev",
+    "dev:all": "concurrently \"npm run dev:inventory\" \"npm run dev:order\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nestjs/config": "^3.3.0",
+    "concurrently": "^9.1.0",
+    "dotenv": "^16.4.5"
+  }
+}
