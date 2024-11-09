@@ -1,0 +1,4 @@
+packages:
+  - 'src/services/*'
+  - 'src/application'
+  - 'src/infrastructure'
