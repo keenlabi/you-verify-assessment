@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateOneModel } from 'mongoose';
+import { Model, UpdateOneModel, UpdateQuery } from 'mongoose';
 import { InventoryDocument } from '../schemas/inventory.schema';
 import { InventoryEntity } from 'src/domain/Inventory.entity';
 
@@ -16,11 +16,11 @@ export class InventoryRepository {
     return createdInventory.save();
   }
 
-  async findByStockId(id: string): Promise<InventoryDocument | null> {
+  async findById(id: string): Promise<InventoryDocument | null> {
     return this.inventoryModel.findOne({ id }).exec();
   }
 
-  async updateById(id: string, data: UpdateOneModel): Promise<InventoryDocument | null> {
-    return this.inventoryModel.findByIdAndUpdate(id, data, { new: true }).exec();
+  async updateById(id: string, update: UpdateQuery<InventoryDocument>): Promise<InventoryDocument | null> {
+    return this.inventoryModel.findOneAndUpdate({id}, update, { new: true }).exec();
   }
 }
