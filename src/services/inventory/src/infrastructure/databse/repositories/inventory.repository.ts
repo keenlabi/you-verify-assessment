@@ -16,8 +16,8 @@ export class InventoryRepository {
     return createdInventory.save();
   }
 
-  async findById(id: string): Promise<InventoryDocument | null> {
-    return this.inventoryModel.findById(id).exec();
+  async findByStockId(id: string): Promise<InventoryDocument | null> {
+    return this.inventoryModel.findOne({ id }).exec();
   }
 
   async updateById(id: string, data: UpdateOneModel): Promise<InventoryDocument | null> {
