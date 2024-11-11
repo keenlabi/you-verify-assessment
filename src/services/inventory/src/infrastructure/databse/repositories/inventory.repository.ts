@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateOneModel, UpdateQuery } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 import { InventoryDocument } from '../schemas/inventory.schema';
 import { InventoryEntity } from 'src/domain/Inventory.entity';
 
