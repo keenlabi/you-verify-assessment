@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { InventoryService } from '../../services/inventory.service';
 import { InventoryEntity } from '../../domain/Inventory.entity';
 import { CreateStockDto } from '../../dtos/createStockDto';
 import { ServerErrorResponseDto, ServerSuccessResponseDto } from '../../dtos/serverResponseDto';
 import { validate as isUUID } from "uuid";
 import { ValidationError } from '../../infrastructure/errors';
+import { IncreaseStockQuantityDto } from 'src/dtos/increaseStockQuatityDto';
 
 @Controller('inventory')
 export class InventoryController { 
@@ -32,5 +33,17 @@ export class InventoryController {
     const inventoryEntity = await this.inventoryService.retrieveStockItemByStockId(id);
 
     return new ServerSuccessResponseDto(inventoryEntity, "Stock retrieved successfully", 200);
+  }
+
+  @Patch()
+  async increaseStockQuatity(@Query() query:IncreaseStockQuantityDto): Promise<ServerSuccessResponseDto<InventoryEntity> | ServerErrorResponseDto> {
+
+    const increaseStockQuantityDto = new IncreaseStockQuantityDto(query);
+    const validationError = increaseStockQuantityDto.validate();
+    if(validationError) return validationError;
+
+    const inventoryEntity = await this.inventoryService.increaseStockItemQuantity(increaseStockQuantityDto);
+
+    return new ServerSuccessResponseDto(inventoryEntity, `Stock quantity has been increased by ${query.quantity} successfully`, 200);
   }
 }
