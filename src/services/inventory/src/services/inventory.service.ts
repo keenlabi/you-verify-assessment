@@ -25,8 +25,8 @@ export class InventoryService {
     );
   }
 
-  async retrieveStockItemById(id:string): Promise<InventoryEntity> {
-    const newInventory = await this.inventoryRepository.findById(id);
+  async retrieveStockItemByStockId(id:string): Promise<InventoryEntity> {
+    const newInventory = await this.inventoryRepository.findByStockId(id);
     return new InventoryEntity(
       newInventory.id, 
       newInventory.name,
