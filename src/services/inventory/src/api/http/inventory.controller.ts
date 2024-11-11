@@ -5,7 +5,7 @@ import { CreateStockDto } from '../../dtos/createStockDto';
 import { ServerErrorResponseDto, ServerSuccessResponseDto } from '../../dtos/serverResponseDto';
 import { validate as isUUID } from "uuid";
 import { ValidationError } from '../../infrastructure/errors';
-import { IncreaseStockQuantityDto } from 'src/dtos/increaseStockQuatityDto';
+import { UpdateStockQuantityDto } from 'src/dtos/updateStockQuatityDto';
 
 @Controller('inventory')
 export class InventoryController { 
@@ -36,14 +36,14 @@ export class InventoryController {
   }
 
   @Patch()
-  async increaseStockQuatity(@Query() query:IncreaseStockQuantityDto): Promise<ServerSuccessResponseDto<InventoryEntity> | ServerErrorResponseDto> {
+  async updateStockQuatity(@Query() query:UpdateStockQuantityDto): Promise<ServerSuccessResponseDto<InventoryEntity> | ServerErrorResponseDto> {
 
-    const increaseStockQuantityDto = new IncreaseStockQuantityDto(query);
-    const validationError = increaseStockQuantityDto.validate();
+    const updateStockQuantityDto = new UpdateStockQuantityDto(query);
+    const validationError = updateStockQuantityDto.validate();
     if(validationError) return validationError;
 
-    const inventoryEntity = await this.inventoryService.increaseStockItemQuantity(increaseStockQuantityDto);
+    const inventoryEntity = await this.inventoryService.updateStockItemQuantity(updateStockQuantityDto);
 
-    return new ServerSuccessResponseDto(inventoryEntity, `Stock quantity has been increased by ${query.quantity} successfully`, 200);
+    return new ServerSuccessResponseDto(inventoryEntity, `Stock quantity has been updated by ${query.quantity} successfully`, 200);
   }
 }

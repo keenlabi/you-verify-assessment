@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UpdateQuery } from 'mongoose';
 import { InventoryEntity } from 'src/domain/Inventory.entity';
-import { IncreaseStockQuantityDto } from 'src/dtos/increaseStockQuatityDto';
+import { UpdateStockQuantityDto } from 'src/dtos/updateStockQuatityDto';
 import { InventoryDocument, InventoryRepository } from 'src/infrastructure/databse';
 import { v4 as UUID } from "uuid";
 
@@ -37,11 +37,11 @@ export class InventoryService {
     );
   }
 
-  async increaseStockItemQuantity(increaseStockQuantityDto:IncreaseStockQuantityDto): Promise<InventoryEntity> {
+  async updateStockItemQuantity(updateStockQuantityDto:UpdateStockQuantityDto): Promise<InventoryEntity> {
 
-    const update:UpdateQuery<InventoryDocument> =  { $inc: { quantityInStock: increaseStockQuantityDto.quantity } }
+    const update:UpdateQuery<InventoryDocument> =  { $inc: { quantityInStock: updateStockQuantityDto.quantity } }
 
-    const newInventory = await this.inventoryRepository.updateById(increaseStockQuantityDto.id, update);
+    const newInventory = await this.inventoryRepository.updateById(updateStockQuantityDto.id, update);
 
     return new InventoryEntity(
       newInventory.id, 
