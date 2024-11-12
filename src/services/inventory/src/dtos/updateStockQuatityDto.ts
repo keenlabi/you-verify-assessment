@@ -5,14 +5,14 @@ export class UpdateStockQuantityDto {
     id:string;
     quantity: number;
 
-    constructor(props:UpdateStockQuantityDto) {
-        this.id = props?.id;
-        this.quantity = Number(props?.quantity.toString())
+    constructor(id:string, quantity:number) {
+        this.id = id;
+        this.quantity = Number(quantity.toString())
     }
 
     validate():ValidationError | null {
         if(!this.id || !isUUID(this.id)) {
-            throw  new ValidationError("invalid stock id");
+            throw new ValidationError("invalid stock id");
         }
         if (!this.quantity) {
             throw new ValidationError("'quantity' cannot be empty");

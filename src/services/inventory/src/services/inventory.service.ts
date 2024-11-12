@@ -41,8 +41,9 @@ export class InventoryService {
     );
   }
 
-  async updateStockItemQuantity(updateStockQuantityDto:UpdateStockQuantityDto): Promise<InventoryEntity> {
-
+  async updateStockItemQuantity(updateStockQuantityData:UpdateStockQuantityDto): Promise<InventoryEntity> {
+    
+    const updateStockQuantityDto = new UpdateStockQuantityDto(updateStockQuantityData.id, updateStockQuantityData.quantity);
     const update:UpdateQuery<InventoryDocument> =  { $inc: { quantityInStock: updateStockQuantityDto.quantity } }
 
     const newInventory = await this.inventoryRepository.updateById(updateStockQuantityDto.id, update);

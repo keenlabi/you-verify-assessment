@@ -39,7 +39,7 @@ export class InventoryController {
   @Patch()
   async updateStockQuatity(@Query() query:UpdateStockQuantityDto): Promise<ServerSuccessResponseDto<InventoryEntity> | ServerErrorResponseDto> {
 
-    const updateStockQuantityDto = new UpdateStockQuantityDto(query);
+    const updateStockQuantityDto = new UpdateStockQuantityDto(query?.id, query?.quantity);
     const validationError = updateStockQuantityDto.validate();
     if(validationError) return validationError;
 
@@ -57,7 +57,7 @@ export class InventoryController {
   @MessagePattern({ cmd: 'update-stock-quantity' })
   async handleUpdateStockQuantity(updateData:UpdateStockQuantityDto): Promise<boolean> {
     
-    const updateStockQuantityDto = new UpdateStockQuantityDto(updateData);
+    const updateStockQuantityDto = new UpdateStockQuantityDto(updateData?.id, updateData?.quantity);
     const validationError = updateStockQuantityDto.validate();
     if(validationError) return false;
 
