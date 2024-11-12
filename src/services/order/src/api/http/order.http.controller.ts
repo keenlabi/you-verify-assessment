@@ -7,7 +7,7 @@ import { validate as isUUID } from "uuid";
 import { NotFoundError, ValidationError } from 'src/infrastructure/errors';
 
 @Controller('order')
-export class OrderController { 
+export class OrderHTTPController { 
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
