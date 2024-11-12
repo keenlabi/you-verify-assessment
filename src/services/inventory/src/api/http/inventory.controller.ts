@@ -6,6 +6,7 @@ import { ServerErrorResponseDto, ServerSuccessResponseDto } from '../../dtos/ser
 import { validate as isUUID } from "uuid";
 import { ValidationError } from '../../infrastructure/errors';
 import { UpdateStockQuantityDto } from 'src/dtos/updateStockQuatityDto';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('inventory')
 export class InventoryController { 
@@ -45,5 +46,28 @@ export class InventoryController {
     const inventoryEntity = await this.inventoryService.updateStockItemQuantity(updateStockQuantityDto);
 
     return new ServerSuccessResponseDto(inventoryEntity, `Stock quantity has been updated by ${query.quantity} successfully`, 200);
+  }
+
+  @MessagePattern({ cmd: 'check-stock' })
+  async handleCheckStock(stockId: string): Promise<boolean> {
+    const stockItem = await this.inventoryService.retrieveStockItemByStockId(stockId);
+    return stockItem && stockItem.quantityInStock > 0;
+  }
+
+  @MessagePattern({ cmd: 'update-stock-quantity' })
+  async handleUpdateStockQuantity(updateData:UpdateStockQuantityDto): Promise<boolean> {
+    
+    const updateStockQuantityDto = new UpdateStockQuantityDto(updateData);
+    const validationError = updateStockQuantityDto.validate();
+    if(validationError) return false;
+
+    const stockItem = await this.inventoryService.retrieveStockItemByStockId(updateStockQuantityDto.id);
+    if(!stockItem.quantityInStock) return false;
+    if(Math.abs(updateStockQuantityDto.quantity) > stockItem.quantityInStock) return false;
+
+    const inventoryEntity = await this.inventoryService.updateStockItemQuantity(updateStockQuantityDto);
+    if(!inventoryEntity) return false;
+    
+    return true;
   }
 }
