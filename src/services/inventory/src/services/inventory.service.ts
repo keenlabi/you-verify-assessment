@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { UpdateQuery } from 'mongoose';
 import { InventoryEntity } from 'src/domain/Inventory.entity';
 import { UpdateStockQuantityDto } from 'src/dtos/updateStockQuatityDto';
@@ -7,7 +8,10 @@ import { v4 as UUID } from "uuid";
 
 @Injectable()
 export class InventoryService {
-  constructor(private readonly inventoryRepository: InventoryRepository) {}
+  constructor(
+    private readonly inventoryRepository: InventoryRepository,
+    @Inject('INVENTORY_EVENT_CLIENT') private readonly eventClient: ClientProxy
+  ) {}
 
   async createStockItem(createStockData: Partial<InventoryEntity>): Promise<InventoryEntity> {
     
@@ -42,6 +46,28 @@ export class InventoryService {
     const update:UpdateQuery<InventoryDocument> =  { $inc: { quantityInStock: updateStockQuantityDto.quantity } }
 
     const newInventory = await this.inventoryRepository.updateById(updateStockQuantityDto.id, update);
+
+    if(updateStockQuantityDto.quantity > 0) {
+      const event = {
+        stockId: newInventory.id,
+        quantity: newInventory.quantityInStock,
+        addedQuantity: updateStockQuantityDto.quantity,
+        timestamp: newInventory.updatedAt,
+      };
+      
+      this.eventClient.emit("stock.added", event);
+    }
+
+    if(updateStockQuantityDto.quantity < 0) {
+      const event = {
+        stockId: newInventory.id,
+        quantity: newInventory.quantityInStock,
+        removedQuantity: updateStockQuantityDto.quantity,
+        timestamp: newInventory.updatedAt,
+      };
+      
+      this.eventClient.emit("stock.reduced", event);
+    }
 
     return new InventoryEntity(
       newInventory.id, 
