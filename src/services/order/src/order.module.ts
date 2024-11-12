@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule, OrderRepository } from './infrastructure/databse';
-import { OrderController } from './api/http/order.controller';
+import {  OrderHTTPController } from './api/http/order.http.controller';
 import { OrderService } from './services/order.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { OrderEventsController } from './api/events/order.events.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       },
     ]),
   ],
-  controllers: [OrderController],
+  controllers: [OrderHTTPController, OrderEventsController],
   providers: [OrderService, OrderRepository],
 })
 export class AppModule {}
