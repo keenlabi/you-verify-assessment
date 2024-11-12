@@ -14,9 +14,10 @@ export class OrderController {
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<ServerSuccessResponseDto<OrderEntity> | ServerErrorResponseDto> {
     
     const validationError = createOrderDto.validate();
-    if(validationError) return validationError;
+    if(validationError) return new ServerErrorResponseDto(validationError);
 
-    const orderEntity = await this.orderService.createOrder(createOrderDto);
+    const orderEntity = await this.orderService.createOrder(createOrderDto)
+    .catch((error)=> { throw new ServerErrorResponseDto(error) });
 
     return new ServerSuccessResponseDto(orderEntity, "New order created successfully", 201);
   }
