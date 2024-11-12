@@ -14,6 +14,10 @@ export class InventoryDocument extends Document {
     
     @Prop({ required: true })
     pricePerUnit:number;
+
+    createdAt:Date;
+
+    updatedAt:Date;
 }
 
 const InventorySchema = SchemaFactory.createForClass(InventoryDocument);
