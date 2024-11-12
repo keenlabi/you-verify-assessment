@@ -70,7 +70,7 @@ export class OrderService {
 
   async retrieveOrderById(id:string): Promise<OrderEntity|null> {
     const newOrder = await this.orderRepository.findById(id);
-    if(!newOrder) return newOrder;
+    if(!newOrder) return null;
 
     return new OrderEntity(
       newOrder.id,

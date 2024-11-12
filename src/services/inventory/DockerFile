@@ -2,12 +2,12 @@ FROM node:21.7.3-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY . .
+# COPY ./package*.json ./
+
 RUN npm install
 
-COPY . .
-
-WORKDIR /usr/src/services/order
+# WORKDIR /usr/src/services/inventory
 
 RUN npm run build
 

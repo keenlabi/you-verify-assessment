@@ -4,7 +4,7 @@ import { InventoryEntity } from '../../domain/Inventory.entity';
 import { CreateStockDto } from '../../dtos/createStockDto';
 import { ServerErrorResponseDto, ServerSuccessResponseDto } from '../../dtos/serverResponseDto';
 import { validate as isUUID } from "uuid";
-import { ValidationError } from '../../infrastructure/errors';
+import { NotFoundError, ValidationError } from '../../infrastructure/errors';
 import { UpdateStockQuantityDto } from 'src/dtos/updateStockQuatityDto';
 import { MessagePattern } from '@nestjs/microservices';
 
@@ -44,6 +44,10 @@ export class InventoryController {
     if(validationError) return validationError;
 
     const inventoryEntity = await this.inventoryService.updateStockItemQuantity(updateStockQuantityDto);
+    if(!inventoryEntity) {
+      const error = new NotFoundError("Stock not found");
+      return new ServerErrorResponseDto(error);
+    }
 
     return new ServerSuccessResponseDto(inventoryEntity, `Stock quantity has been updated by ${query.quantity} successfully`, 200);
   }

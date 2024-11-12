@@ -13,7 +13,7 @@ export class InventoryService {
     @Inject('INVENTORY_EVENT_CLIENT') private readonly eventClient: ClientProxy
   ) {}
 
-  async createStockItem(createStockData: Partial<InventoryEntity>): Promise<InventoryEntity> {
+  async createStockItem(createStockData: Partial<InventoryEntity>): Promise<InventoryEntity|null> {
     
     const newInventoryEntity = new InventoryEntity(
       UUID(),
@@ -33,6 +33,8 @@ export class InventoryService {
 
   async retrieveStockItemByStockId(id:string): Promise<InventoryEntity> {
     const newInventory = await this.inventoryRepository.findById(id);
+    if(!newInventory) return null;
+
     return new InventoryEntity(
       newInventory.id, 
       newInventory.name,
@@ -41,12 +43,13 @@ export class InventoryService {
     );
   }
 
-  async updateStockItemQuantity(updateStockQuantityData:UpdateStockQuantityDto): Promise<InventoryEntity> {
+  async updateStockItemQuantity(updateStockQuantityData:UpdateStockQuantityDto): Promise<InventoryEntity|null> {
     
     const updateStockQuantityDto = new UpdateStockQuantityDto(updateStockQuantityData.id, updateStockQuantityData.quantity);
     const update:UpdateQuery<InventoryDocument> =  { $inc: { quantityInStock: updateStockQuantityDto.quantity } }
 
     const newInventory = await this.inventoryRepository.updateById(updateStockQuantityDto.id, update);
+    if(!newInventory) return null
 
     if(updateStockQuantityDto.quantity > 0) {
       const event = {

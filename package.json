@@ -5,7 +5,9 @@
   "scripts": {
     "dev:inventory": "cd src/services/inventory && npm run start:dev",
     "dev:order": "cd src/services/order && npm run start:dev",
-    "dev:all": "concurrently \"npm run dev:inventory\" \"npm run dev:order\""
+    "dev:all": "concurrently \"npm run dev:inventory\" \"npm run dev:order\"",
+    "build:inventory": "cd src/services/inventory && npm run build",
+    "build:order": "cd src/services/order && npm run build"
   },
   "workspaces": [
     "services/*",
