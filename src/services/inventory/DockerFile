@@ -1,0 +1,16 @@
+FROM node:21.7.3-alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+WORKDIR /usr/src/services/order
+
+RUN npm run build
+
+EXPOSE 3002
+
+CMD ["node", "dist/main"]
