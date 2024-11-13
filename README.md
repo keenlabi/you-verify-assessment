@@ -1,4 +1,103 @@
-# Design Documentation for E-Commerce Inventory & Order Microservices
+# **Project Setup and Usage Documentation**
+
+### Prerequisites
+
+Ensure the following are installed on your system before setting up the project:
+
+- **Docker**
+- **Docker Compose**
+- **Node.js** (for local development, if needed)
+
+### Project Structure Overview
+
+```
+/project-root
+  /src
+    /services
+      /inventory
+        Dockerfile
+        package.json
+        src/
+      /order
+        Dockerfile
+        package.json
+        src/
+  docker-compose.yml
+```
+
+### Setup Instructions
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone <repository-url>
+   cd project-root
+   ```
+
+2. **Build and Start the Services Using Docker Compose**
+   Run the following command in the project root directory:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+   This will:
+
+   - Build the Docker images for `inventory-service and order-service`
+   - Start the containers for the services, MongoDB, and Redis.
+
+3. **Verify Service Ports**
+
+   - `inventory-service` is accessible at `http://localhost:3002`
+   - `order-service` is accessible at `http://localhost:3001`
+   - MongoDB is accessible at `mongodb://localhost:27017`
+   - Redis is accessible at `localhost:6379` or `redis:6379`
+
+### Configuration Details
+
+- **Environment Variables**:
+  - **Inventory Service**:
+    ```
+    NODE_ENV=development
+    MONGO_URI=mongodb://mongo:27017/inventory-db
+    ```
+  - **Order Service**:
+    ```
+    NODE_ENV=development
+    MONGO_URI=mongodb://mongo:27017/order-db
+    ```
+
+### Usage Instructions
+
+1. **Access the Services**
+
+   - Use `http://localhost:3002` to interact with the inventory service.
+   - Use `http://localhost:3001` to interact with the order service.
+
+2. **Inter-Service Communication**
+   The `order-service` can communicate with `inventory-service` through the Redis service
+
+3. **Data Persistence**
+
+   - MongoDB is configured to store data for both services.
+   - Redis is included for message brokering.
+
+### Additional Notes
+
+- To stop the services, run:
+  ```bash
+  docker-compose down
+  ```
+- For debugging or development, you can access container logs:
+  ```bash
+  docker-compose logs -f
+  ```
+- Modify the `docker-compose.yml` file or service `Dockerfile` for custom configurations or ports.
+
+**End of Documentation**
+
+
+# Design Documentation 
 
 ## Project Overview
 
