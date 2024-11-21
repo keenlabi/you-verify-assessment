@@ -218,7 +218,7 @@ Custom error handling is implemented using an exception filter. This filter form
 	1. Stock Added: This is triggered if the quantity added is greater than 0
 		`stock.added`
 		
-	1. Stock Reduced: This is triggered if the quantity added is greater than 0
+	1. Stock Reduced: This is triggered if the quantity added is less than 0
 		`stock.reduced`
 	   
 - **Validation**: Ensures valid stock data using DTOs and entity logic.
